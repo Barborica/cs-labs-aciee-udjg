@@ -32,3 +32,8 @@ body {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+.panel {
+  margin: 10px 0 16px;
+  font: 14px/1.4 Arial, sans-serif;
+}

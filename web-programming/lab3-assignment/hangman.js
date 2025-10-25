@@ -28,10 +28,63 @@ var drawPillar = function() {
     ctx.stroke();
 }
 
+var drawHangmanStep = function(step) {
+    if (step === 1) {
+        //cap, gura, ochi
+        ctx.beginPath();
+        ctx.arc(200, 100, 30, 0, Math.PI * 2, true);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(190, 90, 5, 0, Math.PI * 2, true);
+        ctx.arc(210, 90, 5, 0, Math.PI * 2, true);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(200, 110, 10, 0, Math.PI, false);
+        ctx.stroke();
+    }
+    else if (step === 2) {
+        //corp
+        ctx.beginPath();
+        ctx.moveTo(200, 130);
+        ctx.lineTo(200, 220);
+        ctx.stroke();
+    }
+    else if (step === 3) {
+        //brat stang
+        ctx.beginPath();
+        ctx.moveTo(200, 150);
+        ctx.lineTo(160, 190);
+        ctx.stroke();
+    }
+    else if (step === 4) {
+        //brat drept
+        ctx.beginPath();
+        ctx.moveTo(200, 150);
+        ctx.lineTo(240, 190);
+        ctx.stroke();
+    }
+    else if (step === 5) {
+        //picior stang
+        ctx.beginPath();
+        ctx.moveTo(200, 220);
+        ctx.lineTo(170, 260);
+        ctx.stroke();
+    }
+    else if (step === 6) {
+        //picior drept
+        ctx.beginPath();
+        ctx.moveTo(200, 220);
+        ctx.lineTo(230, 260);
+        ctx.stroke();
+    }
+}
+
 //valori initiale
 var secret = "MASINA";
 var answerVector=[];
 var lettersLeft = 0;
+var wrongGuess = 0;
+var MAX_LIVES = 6;
 
 var wordElement = document.getElementById("word"); //cauta in index.html elementul cu id-ul "word"
 var keyboardElement = document.getElementById("keyboard"); //cauta in index.html elementul cu id-ul "keyboard"
@@ -67,7 +120,7 @@ var buildKeyboard = function() {
     }
 }
 
-//functie care actualizeaza jocul in urma unei incercari
+//functie care verifica daca litera este in cuvant
 var updateGame = function(letters, word, vector){
     var hits = 0;
     for (var i=0; i<word.length; i++) {
@@ -79,12 +132,31 @@ var updateGame = function(letters, word, vector){
     return hits;
 }
 
-//functie care gestioneaza incercarile reusite
+//functie care gestioneaza incercarile
 var handleGuess = function(ch) {
     ch = ch.toUpperCase();
+    var buttons = keyboardElement.querySelectorAll(".key");
+    //dezactiveaza butonul apasat
+    for (var i=0; i<buttons.length; i++) {
+        if (buttons[i].textContent === ch) {
+            buttons[i].disabled = true;
+            break;
+        }
+    }
     var hits = updateGame(ch, secret, answerVector);
     if (hits > 0) {
+        //litera e corecta
+        lettersLeft -= hits;
         renderWord(answerVector);
+        if (lettersLeft === 0) {
+            alert("Felicitari! Ai castigat!");
+        }
+    } else {
+        wrongGuess++;
+        drawHangmanStep(wrongGuess);
+        if (wrongGuess >= MAX_LIVES) {
+            alert("Ai pierdut! Cuvantul era: " + secret);
+        }
     }
 }
 
@@ -92,6 +164,7 @@ var handleGuess = function(ch) {
 var init = function() {
     drawPillar();
     answerVector = setupAnswerVector(secret);
+    wrongGuess = 0;
     lettersLeft = secret.length;
     renderWord(answerVector);
     buildKeyboard();
