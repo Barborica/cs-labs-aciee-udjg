@@ -6,4 +6,29 @@ body {
 #hangmanCanvas {
   border: 1px solid #333;
   display: block;
+  margin-bottom: 16px;
+}
+
+.word {
+  font: 700 28px ui-monospace, monospace;
+  letter-spacing: .18em;
+  margin: 12px 0;
+}
+
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+  max-width: 520px;
+}
+
+.key {
+  padding: 10px 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.key[disabled]{
+  opacity: 0.4;
+  cursor: not-allowed;
 }
