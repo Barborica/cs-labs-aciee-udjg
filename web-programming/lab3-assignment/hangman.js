@@ -79,8 +79,16 @@ var drawHangmanStep = function(step) {
     }
 }
 
+// cuvinte per categorie
+var WordsDatabase = {
+    "Animale": ["CAINE", "PISICA", "ELEFANT", "TIGRU", "LEU", "ZEBRA", "GIRAFA", "URS", "VULPE", "RATON", "DELFIN"],
+    "Fructe": ["MERE", "BANANA", "PORTOCALA", "CIRESE", "STRUGURI", "PEPENE", "PRUNE", "PIERSICA", "KIWI", "MANGO"],
+    "Tari": ["ROMANIA", "FRANTA", "GERMANIA", "ITALIA", "SPANIA", "PORTUGALIA", "GRECIA", "BULGARIA", "UNGARIA", "POLONIA"],
+    "Vehicule": ["MASINA", "MOTOCICLETA", "BICICLETA", "CAMION", "AUTOBUZ", "TREN", "AVION", "BARCA", "TRAMVAI", "METROU"]
+};
+
 //valori initiale
-var secret = "MASINA";
+var secret = "";
 var answerVector=[];
 var lettersLeft = 0;
 var wrongGuess = 0;
@@ -88,6 +96,17 @@ var MAX_LIVES = 6;
 
 var wordElement = document.getElementById("word"); //cauta in index.html elementul cu id-ul "word"
 var keyboardElement = document.getElementById("keyboard"); //cauta in index.html elementul cu id-ul "keyboard"
+var categoryElement = document.getElementById("category"); //cauta in index.html elementul cu id-ul "category"
+var buttonNewGame = document.getElementById("newGame"); //cauta in index.html elementul cu id-ul "newGame"
+var buttonRevealWord = document.getElementById("revealWord"); //cauta in index.html elementul cu id-ul "revealWord"
+
+//eveniment alegere aleatorie cuvant si categorie
+var chooseRandomWord = function() {
+    var categories = Object.keys(WordsDatabase), category=categories[Math.floor(Math.random() * categories.length)];
+    var words = WordsDatabase[category], word = words[Math.floor(Math.random() * words.length)];
+    categoryElement.textContent = category;
+    return word;
+}
 
 //functie care initializeaza vectorul raspuns
 var setupAnswerVector = function(word) {
@@ -132,6 +151,14 @@ var updateGame = function(letters, word, vector){
     return hits;
 }
 
+//functie care dezactiveaza toate butoanele
+var disableKeys = function() {
+    var buttons = keyboardElement.querySelectorAll(".key");
+    for (var i=0; i<buttons.length; i++) {
+        buttons[i].disabled = true;
+    }
+}
+
 //functie care gestioneaza incercarile
 var handleGuess = function(ch) {
     ch = ch.toUpperCase();
@@ -150,18 +177,23 @@ var handleGuess = function(ch) {
         renderWord(answerVector);
         if (lettersLeft === 0) {
             alert("Felicitari! Ai castigat!");
+            disableKeys();
         }
     } else {
         wrongGuess++;
         drawHangmanStep(wrongGuess);
         if (wrongGuess >= MAX_LIVES) {
             alert("Ai pierdut! Cuvantul era: " + secret);
+            disableKeys();
+            answerVector = secret.split("");
+            renderWord(answerVector);
         }
     }
 }
 
-//initializare joc
+//functie pornire/repornire joc
 var init = function() {
+    secret = chooseRandomWord();
     drawPillar();
     answerVector = setupAnswerVector(secret);
     wrongGuess = 0;
@@ -170,4 +202,13 @@ var init = function() {
     buildKeyboard();
 }
 
+buttonNewGame.onclick = function() {
+    init(false);
+}
+
+buttonRevealWord.onclick = function() {
+    alert("Cuvantul: " + secret);
+}
+
+//pornire joc
 init();
