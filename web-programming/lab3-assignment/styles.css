@@ -1,31 +1,108 @@
+*{
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  margin: 30px;
+  margin: 0;
+  padding: 24px;
+  font-family: Inter, system-ui, Arial, sans-serif;
+  color: white;
+  background: radial-gradient(1200px 800px at 20% 10%, #0f1540 0%, #0b1020 55%);
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+
+.app {
+  width: min(100%, 980px);
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 420px 1fr;
+}
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: linear-gradient(180deg, #FFFFFF08, #FFFFFF03);
+  border: 1px solid #FFFFFF14;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 30px #00000059;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+.gameDescription {
+  margin: 0 0 16px;
+  color: #a1a8c3;
+  font-size: 14px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.lives {
+  font-variant-numeric: tabular-nums;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #101633;
+  border: 1px solid #FFFFFF14;
 }
 
 #hangmanCanvas {
-  border: 1px solid #333;
+  width: 100%;
+  background: #0c1230;
+  border-radius: 12px;
+  border: 1px solid #FFFFFF14;
   display: block;
-  margin-bottom: 16px;
+  box-shadow: inset 0 0 0 1px #FFFFFF0A;
 }
 
 .word {
   font: 700 28px ui-monospace, monospace;
   letter-spacing: .18em;
-  margin: 12px 0;
+  display: flex;
+  gap: .35em;
+  flex-wrap: wrap;
+  padding: 12px 0;
+  user-select: none;
+}
+
+.muted {
+  color: #a1a8c3;
+  font-size: 20px;
 }
 
 .keyboard {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: 8px;
-  max-width: 520px;
 }
 
 .key {
   padding: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #FFFFFF14;
+  background: #12183a;
+  color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: transform .06s ease, border-color .15s ease;
+  user-select: none;
+}
+.key:hover {
+  border-color: #5b9cff;
+  transform: translateY(-2px);
 }
 
 .key[disabled]{
@@ -33,7 +110,24 @@ body {
   cursor: not-allowed;
 }
 
-.panel {
-  margin: 10px 0 16px;
-  /* font: 14px/1.4 Arial, sans-serif; */
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #FFFFFF1A;
+  background: #0f1433;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.msg {
+  min-height: 22px;
+  color: #a1a8c3;
 }

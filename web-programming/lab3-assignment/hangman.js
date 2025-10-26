@@ -3,7 +3,8 @@ var ctx = canvas.getContext("2d");
 
 ctx.lineWidth = 6;
 ctx.lineCap = "round";
-ctx.strokeStyle = "#333";
+ctx.strokeStyle = "white";
+ctx.fillStyle = "white"; //pentru ochi
 
 var drawPillar = function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -84,26 +85,32 @@ var WordsDatabase = {
     "Animale": ["CAINE", "PISICA", "ELEFANT", "TIGRU", "LEU", "ZEBRA", "GIRAFA", "URS", "VULPE", "RATON", "DELFIN"],
     "Fructe": ["MERE", "BANANA", "PORTOCALA", "CIRESE", "STRUGURI", "PEPENE", "PRUNE", "PIERSICA", "KIWI", "MANGO"],
     "Tari": ["ROMANIA", "FRANTA", "GERMANIA", "ITALIA", "SPANIA", "PORTUGALIA", "GRECIA", "BULGARIA", "UNGARIA", "POLONIA"],
-    "Vehicule": ["MASINA", "MOTOCICLETA", "BICICLETA", "CAMION", "AUTOBUZ", "TREN", "AVION", "BARCA", "TRAMVAI", "METROU"]
+    "Vehicule": ["MASINA", "MOTOCICLETA", "BICICLETA", "CAMION", "AUTOBUZ", "TREN", "AVION", "BARCA", "TRAMVAI", "METROU"],
+    "Culori": ["ROSU", "ALBASTRU", "VERDE", "GALBEN", "PORTOCALIU", "MOV", "ROZ", "MARO", "NEGRU", "ALB"],
+    "Tehnologie": ["COMPUTER", "LAPTOP", "TELEFON", "TABLETA", "TELEVIZOR", "CASTI", "TASTATURA", "MOUSE", "IMPRIMANTA", "ROUTER"]
 };
-
-//valori initiale
-var secret = "";
-var answerVector=[];
-var lettersLeft = 0;
-var wrongGuess = 0;
-var MAX_LIVES = 6;
 
 var wordElement = document.getElementById("word"); //cauta in index.html elementul cu id-ul "word"
 var keyboardElement = document.getElementById("keyboard"); //cauta in index.html elementul cu id-ul "keyboard"
 var categoryElement = document.getElementById("category"); //cauta in index.html elementul cu id-ul "category"
 var buttonNewGame = document.getElementById("newGame"); //cauta in index.html elementul cu id-ul "newGame"
 var buttonRevealWord = document.getElementById("revealWord"); //cauta in index.html elementul cu id-ul "revealWord"
+var lives = document.getElementById("lives"); //cauta in index.html elementul cu id-ul "lives"
+var message = document.getElementById("message"); //cauta in index.html elementul cu id-ul "message"
 
-//eveniment alegere aleatorie cuvant si categorie
+//valori initiale/globale
+var secret = "";
+var answerVector=[];
+var lettersLeft = 0;
+var wrongGuess = 0;
+var MAX_LIVES = 6;
+
+//functie alegere aleatorie cuvant si categorie
 var chooseRandomWord = function() {
-    var categories = Object.keys(WordsDatabase), category=categories[Math.floor(Math.random() * categories.length)];
-    var words = WordsDatabase[category], word = words[Math.floor(Math.random() * words.length)];
+    var categories = Object.keys(WordsDatabase);
+    var category=categories[Math.floor(Math.random() * categories.length)];
+    var words = WordsDatabase[category]
+    var word = words[Math.floor(Math.random() * words.length)];
     categoryElement.textContent = category;
     return word;
 }
@@ -119,6 +126,13 @@ return v;
 
 var renderWord = function(v) {
     wordElement.textContent = v.join(" ");
+}
+
+var renderPanels = function(textMsg) {
+    lives.textContent = (MAX_LIVES - wrongGuess);
+    if(typeof textMsg === "string") {
+        message.textContent = textMsg;
+    }
 }
 
 //functie care construieste tastatura
@@ -175,6 +189,7 @@ var handleGuess = function(ch) {
         //litera e corecta
         lettersLeft -= hits;
         renderWord(answerVector);
+        renderPanels("Felicitari! Litera '" + ch + "' apare in cuvant " + (hits === 1 ? "o data." : "de " + hits + " ori."));
         if (lettersLeft === 0) {
             alert("Felicitari! Ai castigat!");
             disableKeys();
@@ -182,6 +197,7 @@ var handleGuess = function(ch) {
     } else {
         wrongGuess++;
         drawHangmanStep(wrongGuess);
+        renderPanels("Nu exista litera '" + ch + "' in cuvant.");
         if (wrongGuess >= MAX_LIVES) {
             alert("Ai pierdut! Cuvantul era: " + secret);
             disableKeys();
@@ -200,6 +216,9 @@ var init = function() {
     lettersLeft = secret.length;
     renderWord(answerVector);
     buildKeyboard();
+
+    message.textContent = "";
+    lives.textContent = MAX_LIVES;
 }
 
 buttonNewGame.onclick = function() {

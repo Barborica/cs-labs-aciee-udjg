@@ -7,16 +7,35 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Spanzuratoarea</h1>
-    <div class="panel">
-        <button id="newGame">Joc Nou</button>
-        <button id="revealWord">Dezvaluie cuvantul</button>
-        <span style="margin-left: 12px;">Categorie: <b id="category">-</b></span>
-    </div>
-    <canvas id="hangmanCanvas" width="320" height="320"></canvas>
+    <div class="app">
+        <!-- chenar stanga -->
+        <div class="card">
+            <h1>Spanzuratoarea</h1>
+            <p class="gameDescription">Ghiceste cuvantul, introducand litere pe rand. La fiecare litera gresita se deseneaza cate o parte a omuletului; cand desenul e complet, ai pierdut. </p>
+            <canvas id="hangmanCanvas" width="320" height="320"></canvas>
+        </div>
 
-    <div id="word" class="word"></div>
-    <div id="keyboard" class="keyboard"></div>
+        <!-- chenar dreapta -->
+        <div class="card">
+            <div class="status">
+                <div class="row">
+                    <button id="newGame" class="button">Joc Nou</button>
+                    <button id="revealWord" class="button">Dezvaluie cuvantul</button>
+                </div>
+                <div class="lives">Incercari ramase: <span id="lives">6</span></div>
+            </div>
+            <div class="row muted" style="margin-bottom:8px;">
+                <strong>Categorie: </strong><span id="category"></span>
+            </div>
+
+            <div id="word" class="word"></div>
+            <div id="message" class="msg"></div>
+
+            <h3 style="margin:16px 0 8px;">Tastatura</h3>
+            <div id="keyboard" class="keyboard"></div>
+        </div>
+    </div>
+
     <script src="hangman.js"></script>
 </body>
 </html>
