@@ -173,17 +173,48 @@ var disableKeys = function() {
     }
 }
 
+//event listener pentru tastatura fizica
+window.addEventListener("keydown", function(event) {
+
+    //ignora tastele speciale
+    if (!event.key || event.key.length !== 1) {
+        return;
+    }
+
+    var ch = event.key.toUpperCase();
+
+    //ignora daca nu e litera
+    if (ch < 'A' || ch > 'Z') {
+        return;
+    }
+
+    handleGuess(ch);
+})
+
 //functie care gestioneaza incercarile
 var handleGuess = function(ch) {
     ch = ch.toUpperCase();
     var buttons = keyboardElement.querySelectorAll(".key");
+    var physicalButton = null;
     //dezactiveaza butonul apasat
     for (var i=0; i<buttons.length; i++) {
         if (buttons[i].textContent === ch) {
-            buttons[i].disabled = true;
+            // buttons[i].disabled = true;
+            physicalButton = buttons[i];
             break;
         }
     }
+
+    if (!physicalButton) {
+        return;
+    }
+
+    if (physicalButton.disabled) {
+        return; //litera deja incercata
+    }
+    
+    physicalButton.disabled = true;
+
     var hits = updateGame(ch, secret, answerVector);
     if (hits > 0) {
         //litera e corecta
